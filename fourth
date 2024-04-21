@@ -1,0 +1,115 @@
+package com.example.fourth;
+
+public class Book {
+	private Long id;
+	private String title;
+	private String author;
+	private int publicationYear;
+	public Long getId() {
+	return id;
+	}
+	public void setId(Long id) {
+	this.id = id;
+	}
+	public String getTitle() {
+	return title;
+	}
+	public void setTitle(String title) {
+	this.title = title;
+	}
+	public String getAuthor() {
+	return author;
+	}
+	public void setAuthor(String author) {
+	this.author = author;
+	}
+	public int getPublicationYear() {
+	return publicationYear;
+	}
+	public void setPublicationYear(int publicationYear) {
+	this.publicationYear = publicationYear;
+	}
+	
+	}
+
+
+
+
+package com.example.fourth;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/books")
+
+public class BookController {
+
+   private final List<Book> books=new ArrayList<Book>();
+   @GetMapping
+   public List<Book>getAllbooks(){
+	   return books;
+   }
+   
+   @GetMapping("/{id}")
+   public Book getbyid(@PathVariable Long id) {
+	   return findbyid(id);
+   }
+   
+   @PostMapping
+   public Book addbook(@RequestBody Book book) {
+	   books.add(book);
+	   return book;
+   }
+   
+   @PutMapping("/{id}")
+   public Book update(@PathVariable Long id, @RequestBody Book up) {
+	   Book eb=findbyid(id);
+	   if(eb!=null) {
+		   eb.setAuthor(up.getAuthor());
+		   eb.setTitle(up.getTitle());
+		   eb.setPublicationYear(up.getPublicationYear());
+	   }
+	   return eb;
+   }
+   
+   @DeleteMapping("/{id}")
+   public Book delete(@PathVariable Long id) {
+	   Book r=findbyid(id);
+	   if(r!=null) {
+		   books.remove(r);
+	   }
+	   return r;
+   }
+   
+   public Book findbyid(Long id) {
+	   for(Book book:books) {
+		   if(book.getId().equals(id)) {
+			   return book;
+		   }
+	   }
+	   return null;
+   }
+   
+	
+	
+
+}
+
+package com.example.fourth;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FourthApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FourthApplication.class, args);
+	}
+
+}
+
